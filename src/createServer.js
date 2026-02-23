@@ -77,9 +77,27 @@ function createServer() {
             return;
           }
 
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(expense));
+          if (req.headers['content-type'] === 'application/json') {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(expense));
+          } else {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/html');
+
+            res.end(`
+              <!DOCTYPE html>
+              <html lang="en">
+              <head>
+                <meta charset="UTF-8">
+                <title>Expense Saved</title>
+              </head>
+              <body>
+                <pre>${JSON.stringify(expense, null, 2)}</pre>
+              </body>
+              </html>
+            `);
+          }
         });
       });
 
